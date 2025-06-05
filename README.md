@@ -113,8 +113,6 @@ These scripts are preserved for reference, reproducibility, and experimentation.
 
 ## 🤝 Contributing & License
 - **Open Source** under the MIT License
-- PRs and forks welcome!
-
 ---
 
 ## 📣 Thanks!!!!!!
