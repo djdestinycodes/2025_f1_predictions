@@ -1,64 +1,126 @@
-# 2025_f1_predictions
+# 🏁 2025 F1 Predictions
 
-# 🏎️ F1 Predictions 2025 - Machine Learning Model
+![Open Source](https://img.shields.io/badge/Open%20Source-MIT-green?style=for-the-badge)
+![Python](https://img.shields.io/badge/Python-3.11-blue?style=for-the-badge&logo=python)
+![FastF1](https://img.shields.io/badge/FastF1-API-orange?style=for-the-badge)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-yellow?style=for-the-badge&logo=scikit-learn)
+![pandas](https://img.shields.io/badge/pandas-Data%20Science-purple?style=for-the-badge&logo=pandas)
 
-Welcome to the **F1 Predictions 2025** repository! This project uses **machine learning, FastF1 API data, and historical F1 race results** to predict race outcomes for the 2025 Formula 1 season.
+---
 
-## 🚀 Project Overview
-This repository contains a **Gradient Boosting Machine Learning model** that predicts race results based on past performance, qualifying times, and other structured F1 data. The model leverages:
-- FastF1 API for historical race data
-- 2024 race results
-- 2025 qualifying session results
-- Over the course of the season we will be adding additional data to improve our model as well
-- Feature engineering techniques to improve predictions
+# 🏎️ F1 Predictions 2025
 
-## 📊 Data Sources
-- **FastF1 API**: Fetches lap times, race results, and telemetry data
-- **2025 Qualifying Data**: Used for prediction
-- **Historical F1 Results**: Processed from FastF1 for training the model
+**Predict Formula 1 race outcomes for the 2025 season using real F1 data, machine learning, and weather conditions via FastF1.**
 
-## 🏁 How It Works
-1. **Data Collection**: The script pulls relevant F1 data using the FastF1 API.
-2. **Preprocessing & Feature Engineering**: Converts lap times, normalizes driver names, and structures race data.
-3. **Model Training**: A **Gradient Boosting Regressor** is trained using 2024 race results.
-4. **Prediction**: The model predicts race times for 2025 and ranks drivers accordingly.
-5. **Evaluation**: Model performance is measured using **Mean Absolute Error (MAE)**.
+---
 
-### Dependencies
-- `fastf1`
-- `numpy`
-- `pandas`
-- `scikit-learn`
-- `matplotlib`
+## ✨ Features
+- Interactive CLI: Select any configured 2025 race and get instant predictions
+- Uses real F1 data (laps, qualifying, weather) via FastF1
+- Weather-aware: Model incorporates temperature, humidity, rain probability, and wind speed
+- Machine learning (Gradient Boosting) for robust, data-driven predictions
+- Displays model error (MAE) for transparency
+- Easily extensible for new races or features
 
-## File Structure 
-- For every race the end of the file will be numbered in correlation to the race on the calendar, ex. prediction1 - Australia, prediction2 - China, etc.
+---
 
-## 🔧 Usage
-Run the prediction script:
-```bash
-python3 prediction1.py
+## 🧠 How It Works
+1. **Race Selection:** User picks a race from the list (2025 calendar, mapped to 2024 data)
+2. **Data Loading:** FastF1 loads historical race and weather data for the selected event
+3. **Feature Engineering:** Combines qualifying times, driver stats, and weather conditions
+4. **Model Training:** Trains a Gradient Boosting Regressor on historical data
+5. **Prediction:** Predicts race results for the selected event, factoring in weather
+6. **Display:** Shows predicted finishing order, times, and model error
+
+---
+
+## 🛠️ Setup & Usage
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/djdestinycodes/2025_f1_predictions.git
+   cd 2025_f1_predictions
+   ```
+2. **Create and activate a virtual environment:**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+3. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. **Run the interactive prediction system:**
+   ```bash
+   python src/main.py
+   ```
+5. **Follow the prompts** to select a race and view predictions.
+
+---
+
+## 🗂️ Project Structure
 ```
-Expected output:
+2025_f1_predictions/
+├── src/
+│   ├── main.py            # Main interactive CLI
+│   └── race_predictor.py  # Core ML and prediction logic
+├── data/
+│   ├── f1_cache/          # FastF1 cache (auto-generated)
+│   └── race_config.py     # Race and qualifying config (with weather)
+├── archive/               # Standalone scripts for past races/experiments
+├── requirements.txt       # Python dependencies
+└── README.md              # This file
 ```
-🏁 Predicted 2025 Australian GP Winner 🏁
-Driver: Charles Leclerc, Predicted Race Time: 82.67s
-...
-🔍 Model Error (MAE): 3.22 seconds
-```
+
+---
+
+## ⚙️ Configuration & Customization
+- **Races:** All races are defined in `data/race_config.py`.
+- **Weather:** Each race config includes temperature, humidity, rain probability, and wind speed. These are used for predictions and can be edited for "what-if" scenarios.
+- **Adding a Race:** Copy an existing entry in `race_config.py`, update the name, race number, qualifying data, and weather.
+- **Model:** The ML model is defined in `src/race_predictor.py` and can be tuned or swapped for other regressors.
+
+---
+
+## 🧩 How Weather Data Works
+- **Source:** Weather data is pulled from FastF1's historical session data (when available) for maximum realism.
+- **Fallback:** If FastF1 weather is missing, the config values in `race_config.py` are used.
+- **No external APIs:** No OpenWeather or other services required—everything is F1-native!
+
+---
 
 ## 📈 Model Performance
-The Mean Absolute Error (MAE) is used to evaluate how well the model predicts race times. Lower MAE values indicate more accurate predictions.
+- Evaluated using **Mean Absolute Error (MAE)**
+- Lower MAE = more accurate predictions
+- MAE is shown after each prediction for transparency
 
-## 📌 Future Improvements
-- Incorporate **weather conditions** as a feature
-- Add **pit stop strategies** into the model
-- Explore **deep learning** models for improved accuracy
-- @mar_antaya on Instagram and TikTok will update with the latest predictions before every race of the 2025 F1 season
+---
 
-## 📜 License
-This project is licensed under the MIT License.
+## 🗃️ Archive Directory
+The `archive/` folder contains standalone scripts for each race, named in the format:
+- `<race_name>_<year>.py` (e.g., `monaco_2024.py`, `silverstone_2024.py`)
+- Prediction experiments: `prediction_<date>_<description>.py`
 
+These scripts are preserved for reference, reproducibility, and experimentation. The main workflow is now unified and interactive.
 
-🏎️ **Start predicting F1 races like a data scientist!** 🚀
+---
+
+## 🧑‍💻 Troubleshooting
+- **FastF1 cache issues:** If you see errors about missing data, try deleting the `data/f1_cache/` folder and rerunning.
+- **API/data errors:** Ensure you have a stable internet connection for FastF1 to fetch data.
+- **Python version:** Use Python 3.11+ for best compatibility.
+
+---
+
+## 🤝 Contributing & License
+- **Open Source** under the MIT License
+- PRs and forks welcome!
+
+---
+
+## 📣 Thanks!!!!!!
+- **Credits:** This project is based on the original repository by [mar-antaya](https://github.com/mar-antaya/2025_f1_predictions).
+
+---
+
+🏎️ **Start predicting F1 races like a data scientist!** 🚦
 

@@ -51,16 +51,43 @@ qualifying_2025 = pd.DataFrame({
 
 qualifying_2025["CleanAirRacePace (s)"] = qualifying_2025["Driver"].map(clean_air_race_pace)
 
-# get weather data for miami
-API_KEY = "YOURAPIKEY"
-weather_url = f"http://api.openweathermap.org/data/2.5/forecast?lat=25.7617&lon=-80.1918&appid={API_KEY}&units=metric"
-response = requests.get(weather_url)
-weather_data = response.json()
-forecast_time = "2025-05-04 13:00:00"
-forecast_data = next((f for f in weather_data["list"] if f["dt_txt"] == forecast_time), None)
-
-rain_probability = forecast_data["pop"] if forecast_data else 0
-temperature = forecast_data["main"]["temp"] if forecast_data else 20
+# get weather data for Monaco
+API_KEY = "30378db3ca29702e1bbc9e3ab23bcaf1"
+weather_url = f"http://api.openweathermap.org/data/2.5/forecast?lat=43.7384&lon=7.4246&appid={API_KEY}&units=metric"
+try:
+    response = requests.get(weather_url)
+    response.raise_for_status()
+    weather_data = response.json()
+    
+    if "list" not in weather_data:
+        print("\n⚠️ Weather API response format unexpected")
+        print("Using default weather values")
+        rain_probability = 0
+        temperature = 20
+    else:
+        forecast_time = "2025-05-25 13:00:00"  # 15:00 CEST local time
+        forecast_data = next((f for f in weather_data["list"] if f["dt_txt"] == forecast_time), None)
+        
+        if forecast_data:
+            rain_probability = forecast_data.get("pop", 0)
+            temperature = forecast_data.get("main", {}).get("temp", 20)
+            print(f"\n🌤️ Weather Forecast for Monaco GP:")
+            print(f"Temperature: {temperature}°C")
+            print(f"Rain Probability: {rain_probability*100:.1f}%")
+        else:
+            print("\n⚠️ No weather forecast data available for the specified time")
+            rain_probability = 0
+            temperature = 20
+except requests.exceptions.RequestException as e:
+    print(f"\n⚠️ Error fetching weather data: {e}")
+    print("Using default weather values")
+    rain_probability = 0
+    temperature = 20
+except Exception as e:
+    print(f"\n⚠️ Unexpected error: {e}")
+    print("Using default weather values")
+    rain_probability = 0
+    temperature = 20
 
 # adjust qualifying time based on weather conditions
 if rain_probability >= 0.75:
@@ -113,7 +140,7 @@ merged_data["PredictedRaceTime (s)"] = model.predict(X_imputed)
 
 # sort the results to find the predicted winner
 final_results = merged_data.sort_values("PredictedRaceTime (s)")
-print("\n🏁 Predicted 2025 Miami GP Winner 🏁\n")
+print("\n🏁 Predicted 2025 Monaco GP Winner 🏁\n")
 print(final_results[["Driver", "PredictedRaceTime (s)"]])
 y_pred = model.predict(X_test)
 print(f"Model Error (MAE ): {mean_absolute_error(y_test, y_pred):.2f} seconds")
